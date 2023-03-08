@@ -13,23 +13,41 @@
 
 void	print_handler(int signum)
 {
-	if (signum == SIGUSR1 || signum == SIGUSR2)
+	static char	c;
+	static int	i;
+
+	if (signum == SIGUSR2)
 	{
-		ft_printf("Hello\n");
+		ft_printf("1");
+		c |= 1;
 	}
+	else
+		ft_printf("0");
+	if (i == 8)
+	{
+		write(1, &c, 1);
+		i = 0;
+		if (c == 0)
+			ft_printf("Boi\n");
+		c = 0;
+		return ;
+	}
+	else
+		c <<= 1;
+	i++;
 }
 
 int	main(int argc, char* argv[])
 {
-	pid_t	pid;
+	struct sigaction	sa;
 
-	(void) argv;
 	if (argc > 1)
 		return (0);
-	pid = getpid();
-	ft_printf("%d\n", pid);
-	signal(SIGUSR1, print_handler);
-	signal(SIGUSR2, print_handler);
+	(void) argv;
+	sa.sa_handler = print_handler;
+	ft_printf("%d\n", getpid());
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
 		pause();
 	return (0);

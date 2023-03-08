@@ -11,6 +11,26 @@
 /* ************************************************************************** */
 #include "minitalk.h"
 
+void    str_to_bin_and_send(int pid, char *str)
+{
+    int i;
+
+    while (*str)
+    {
+        i = 8;
+        while (i)
+        {
+            if (*str >> i & 1)
+                kill(pid, SIGUSR2);
+            else
+                kill(pid, SIGUSR1);
+            i--;
+            usleep(500);
+        }
+        str++;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     int     pid;
@@ -24,6 +44,6 @@ int main(int argc, char* argv[])
     str = argv[2];
     if (!str)
         return (0);
-    kill(pid, SIGUSR1);
+    str_to_bin_and_send(pid, str);
     return (0);
 }

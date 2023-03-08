@@ -11,11 +11,14 @@ OBJECTS_C=$(FILES_C:.c=.o)
 LIBFT=libft/
 LIBFTNAME=libft.a
 
-all: $(NAME)
+all: $(NAME_S) $(NAME_C)
 
-$(NAME): $(OBJECTS_C) $(OBJECTS_S)
+$(NAME_S): $(OBJECTS_S)
 	$(MAKE) bonus -C $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJECTS_S) $(LIBFT)$(LIBFTNAME) -o $(NAME_S)
+
+$(NAME_C): $(OBJECTS_C)
+	$(MAKE) bonus -C $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJECTS_C) $(LIBFT)$(LIBFTNAME) -o $(NAME_C)
 
 clean:
