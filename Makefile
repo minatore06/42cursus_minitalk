@@ -15,7 +15,7 @@ all: $(NAME_S) $(NAME_C)
 
 $(NAME_S): $(OBJECTS_S)
 	$(MAKE) bonus -C $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJECTS_S) $(LIBFT)$(LIBFTNAME) -o $(NAME_S)
+	$(CC) $(CFLAGS) $(OBJECTS_S) $(LIBFT)$(LIBFTNAME) -g -o $(NAME_S)
 
 $(NAME_C): $(OBJECTS_C)
 	$(MAKE) bonus -C $(LIBFT)
@@ -29,6 +29,6 @@ fclean: clean
 	$(MAKE) fclean -C $(LIBFT)
 	rm -f $(NAME_C) $(NAME_S)
 
-re:	fclean $(NAME)
+re:	fclean all
 
 .PHONY:	all clean fclean re
