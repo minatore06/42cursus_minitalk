@@ -31,4 +31,6 @@ fclean: clean
 
 re:	fclean all
 
-.PHONY:	all clean fclean re
+bonus: $(NAME_S) $(NAME_C)
+
+.PHONY:	all clean fclean re bonus
