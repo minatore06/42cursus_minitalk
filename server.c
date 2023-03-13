@@ -17,22 +17,14 @@ void	print_handler(int signum, siginfo_t *info, void *context)
 {
 	static char	c = 0;
 	static int	i = 0;
-	//int fd;
 
 	(void)context;
 	i++;
-	if (signum == SIGUSR2){
-		//write(1, "1", 1);
-		c |= 1;}
-	//else
-		//write(1, "0", 1);
-	//ft_printf(" %d |", i);
+	if (signum == SIGUSR2)
+		c |= 1;
 	if (i == 8)
 	{
-		//fd = open("./sos.txt", O_WRONLY | O_APPEND);
 		write(1, &c, 1);
-		//close(fd);
-		ft_printf(" oh%dho ", i);
 		i = 0;
 		if (c == 0)
 			kill(info->si_pid, SIGUSR1);
@@ -42,19 +34,19 @@ void	print_handler(int signum, siginfo_t *info, void *context)
 		c <<= 1;
 }
 
-int	main(int argc, char* argv[])
+int	main(int argc, char *argv[])
 {
 	struct sigaction	sa;
-	sigset_t	set;
+	sigset_t			set;
 
 	if (argc > 1)
 		return (0);
 	(void) argv;
 	sa.sa_sigaction = print_handler;
 	sigemptyset(&set);
-    sa.sa_mask = set;
+	sa.sa_mask = set;
 	sa.sa_flags = SA_SIGINFO;
-	ft_printf("%d\n", getpid());
+	ft_printf("Server PID: %d\n", getpid());
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
