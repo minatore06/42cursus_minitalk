@@ -27,11 +27,16 @@ void	print_handler(int signum, siginfo_t *info, void *context)
 		write(1, &c, 1);
 		i = 0;
 		if (c == 0)
+			kill(info->si_pid, SIGUSR2);
+		else
 			kill(info->si_pid, SIGUSR1);
 		c = 0;
 	}
 	else
+	{
 		c <<= 1;
+		kill(info->si_pid, SIGUSR1);
+	}
 }
 
 int	main(int argc, char *argv[])

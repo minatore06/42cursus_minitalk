@@ -11,49 +11,51 @@
 /* ************************************************************************** */
 #include "minitalk.h"
 
-void	acknowledge(int signum)
+char	*g_str;
+
+void	str_to_bin_and_send(int pid, char c, int i)
 {
-	if (signum == SIGUSR1)
-		ft_printf("Message received\n");
-	exit(0);
+	if (c >> i & 1)
+		kill(pid, SIGUSR2);
+	else
+		kill(pid, SIGUSR1);
 }
 
-void	str_to_bin_and_send(int pid, char *str)
+void	acknowledge(int signum, siginfo_t *info, void *context)
 {
-	int	i;
+	static int	i = 7;
 
-	while (*str)
+	(void)context;
+	if (i == 0)
 	{
+		g_str++;
 		i = 8;
-		while (i--)
-		{
-			if (*str >> i & 1)
-				kill(pid, SIGUSR2);
-			else
-				kill(pid, SIGUSR1);
-			usleep(100);
-		}
-		str++;
 	}
-	i = 8;
-	while (i--)
+	i--;
+	if (signum == SIGUSR1)
 	{
-		kill(pid, SIGUSR1);
-		usleep(100);
+		if (!*g_str)
+			kill(info->si_pid, SIGUSR1);
+		else
+			str_to_bin_and_send(info->si_pid, *g_str, i);
+	}
+	else if (signum == SIGUSR2)
+	{
+		ft_printf("Message received\n");
+		exit(0);
 	}
 }
 
 int	main(int argc, char *argv[])
 {
 	int					pid;
-	char				*str;
 	struct sigaction	sa;
 	sigset_t			set;
 
-	sa.sa_handler = acknowledge;
+	sa.sa_sigaction = acknowledge;
 	sigemptyset(&set);
 	sa.sa_mask = set;
-	sa.sa_flags = 0;
+	sa.sa_flags = SA_SIGINFO;
 	if (argc != 3)
 		return (0);
 	pid = ft_atoi(argv[1]);
@@ -61,9 +63,10 @@ int	main(int argc, char *argv[])
 		return (0);
 	if (!argv[2])
 		return (0);
-	str = argv[2];
+	g_str = argv[2];
 	sigaction(SIGUSR1, &sa, NULL);
-	str_to_bin_and_send(pid, str);
+	sigaction(SIGUSR2, &sa, NULL);
+	str_to_bin_and_send(pid, *str, 7);
 	while (1)
 		pause();
 	return (0);
