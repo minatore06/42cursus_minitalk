@@ -66,7 +66,7 @@ int	main(int argc, char *argv[])
 	g_str = argv[2];
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
-	str_to_bin_and_send(pid, *str, 7);
+	str_to_bin_and_send(pid, *g_str, 7);
 	while (1)
 		pause();
 	return (0);
