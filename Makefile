@@ -15,7 +15,7 @@ all: $(NAME_S) $(NAME_C)
 
 $(NAME_S): $(OBJECTS_S)
 	$(MAKE) bonus -C $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJECTS_S) $(LIBFT)$(LIBFTNAME) -g -o $(NAME_S)
+	$(CC) $(CFLAGS) $(OBJECTS_S) $(LIBFT)$(LIBFTNAME) -o $(NAME_S)
 
 $(NAME_C): $(OBJECTS_C)
 	$(MAKE) bonus -C $(LIBFT)
